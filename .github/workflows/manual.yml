@@ -11,12 +11,10 @@ jobs:
         sudo apt-get install git-lfs -y
         git lfs install --skip-repo
 
-    - run: git lfs pull
-
     - name: checkout arduino repo
       uses: actions/checkout@v4
       with:
         repository: 'SiliconLabs/arduino'
         ref: 'main'
-
+    - run: git lfs pull
     - run: ls .
