@@ -1,0 +1,22 @@
+name: CI
+on: 
+  workflow_dispatch:
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install some env
+      run : |
+        sudo apt-get install git-lfs -y
+        git lfs install --skip-repo
+
+    - run: git lfs pull
+
+    - name: checkout arduino repo
+      uses: actions/checkout@v4
+      with:
+        repository: 'SiliconLabs/arduino'
+        ref: 'main'
+
+    - run: ls .
