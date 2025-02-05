@@ -20,4 +20,11 @@ jobs:
         with:
           token: ${{ steps.get_workflow_token.outputs.token }}
           repository: 'congneb/test_build'
+      
+      - name: other clone
+        run: |
+          git clone https://x:${{ steps.get_workflow_token.outputs.token }}@github.com/congneb/test_build haha
+          ls haha
+        
+        
 
