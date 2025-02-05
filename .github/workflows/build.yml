@@ -11,5 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          token: ${{ secrets.MY_SECRET_TOKEN }}
           repository: 'congneb/silabs_bgm220'
 
