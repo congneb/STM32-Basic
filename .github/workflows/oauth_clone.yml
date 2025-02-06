@@ -16,6 +16,5 @@ jobs:
       - name: Clone Private Repository
         run: |
           echo "Cloning private repository..."
-          export OAUTH_CLIENT_SECRET=59b261d5ecdfcf96af30a32e192defb66229a81c
-          git clone https://Ov23linWFcxm3XxgjccM:59b261d5ecdfcf96af30a32e192defb66229a81c@github.com/congneb/test_build.git haha
+          git clone https://github.com/congneb/test_build.git haha
           ls haha
