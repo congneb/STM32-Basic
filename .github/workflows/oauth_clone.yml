@@ -1,4 +1,4 @@
-name: Clone Private Repository
+name: Create issue on commit
 
 on:
   push:
@@ -6,18 +6,19 @@ on:
     - .github/workflows/oauth_clone.yml
 
 jobs:
-  clone_repo:
+  create_issue:
     runs-on: ubuntu-latest
-
+    permissions:
+      issues: write
     steps:
-      - name: Get Token
-        id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v4
-        with:
-          application_id: "Ov23linWFcxm3XxgjccM"
-          application_private_key: "59b261d5ecdfcf96af30a32e192defb66229a81c"
-          
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ steps.get_workflow_token.outputs.token }}
-          repository: 'congneb/test_build'
+      - name: Create issue using REST API
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repos/${{ github.repository }}/issues \
+          --header 'authorization: Bearer 59b261d5ecdfcf96af30a32e192defb66229a81c' \
+          --header 'content-type: application/json' \
+          --data '{
+            "title": "Automated issue for commit: ${{ github.sha }}",
+            "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+            }' \
+          --fail
