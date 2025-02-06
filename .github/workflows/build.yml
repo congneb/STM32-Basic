@@ -13,8 +13,8 @@ jobs:
         id: generate-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}    
+          app-id: ${{ vars.GH_APPS_ID }}
+          private-key: ${{ secrets.GH_APPS_KEY }}    
       # - name: Get Token
       #   id: get_workflow_token
       #   uses: peter-murray/workflow-application-token-action@v4
