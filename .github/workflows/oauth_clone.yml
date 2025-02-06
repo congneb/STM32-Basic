@@ -10,11 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Clone Private Repository
-        run: |
-          echo "Cloning private repository..."
-          git clone https://github.com/congneb/test_build.git haha
-          ls haha
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v4
+        with:
+          application_id: "Ov23linWFcxm3XxgjccM"
+          application_private_key: "59b261d5ecdfcf96af30a32e192defb66229a81c"
+          
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
+          repository: 'congneb/test_build'
