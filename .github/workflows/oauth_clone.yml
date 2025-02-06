@@ -1,0 +1,21 @@
+name: Clone Private Repository
+
+on:
+  push:
+    paths:
+    - .github/workflows/oauth_clone.yml
+
+jobs:
+  clone_repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Clone Private Repository
+        run: |
+          echo "Cloning private repository..."
+          export OAUTH_CLIENT_SECRET=59b261d5ecdfcf96af30a32e192defb66229a81c
+          git clone https://oauth-token:$OAUTH_CLIENT_SECRET@github.com/congneb/test_build.git haha
+          ls haha
