@@ -1,6 +1,10 @@
 name: Clone Private Repo
 
-on: [push]
+on:
+  push:
+    paths:
+     - .github/workflows/clone.yml
+  
 
 jobs:
   clone:
