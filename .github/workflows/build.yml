@@ -1,10 +1,9 @@
 name: Build
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/build.yml
+
 jobs:
   build:
     name: Build
