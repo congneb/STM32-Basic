@@ -1,0 +1,17 @@
+name: Clone Private Repo
+
+on: [push]
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout this repository
+      uses: actions/checkout@v4
+      
+    - name: Clone private repository
+      env:
+        GH_PAT: ${{ secrets.MY_CLASSIC_TOKEN }}
+      run: |
+        git clone https://$GH_PAT@github.com/congneb/test_build.git
