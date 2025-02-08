@@ -1,0 +1,44 @@
+name: Clone Private Repository
+
+on: 
+  push:
+    paths:
+      - .github/workflows/clone2.yml
+
+jobs:
+  clone_repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq ruby
+
+      - name: Generate JWT
+        id: generate_jwt
+        run: |
+          echo "${{ secrets.GH_APPS_KEY }}" > private-key.pem
+          jwt=$(ruby -r openssl -r base64 -r json -e 'payload = { iat: Time.now.to_i, exp: Time.now.to_i + (10 * 60), iss: ${{ vars.GH_APPS_ID }} }; private_key = OpenSSL::PKey::RSA.new(File.read("private-key.pem")); header = { alg: "RS256", typ: "JWT" }; jwt = "#{Base64.urlsafe_encode64(header.to_json)}.#{Base64.urlsafe_encode64(payload.to_json)}"; signature = private_key.sign(OpenSSL::Digest::SHA256.new, jwt); jwt += ".#{Base64.urlsafe_encode64(signature)}"; puts jwt')
+          echo "::set-output name=jwt::$jwt"
+
+      - name: Get Installation Access Token
+        id: get_installation_token
+        run: |
+          jwt=${{ steps.generate_jwt.outputs.jwt }}
+          response=$(curl -X GET -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app/installations)
+          if [ "$(echo $response | jq 'length')" -eq 0 ]; then
+            echo "No installations found"
+            exit 1
+          fi
+          installation_id=$(echo $response | jq '.[0].id')
+          token=$(curl -X POST -H "Authorization: Bearer $jwt" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app/installations/$installation_id/access_tokens | jq -r '.token')
+          echo "::set-output name=token::$token"
+
+      - name: Clone Private Repository
+        run: |
+          token=${{ steps.get_installation_token.outputs.token }}
+          git clone https://x-access-token:$token@github.com/congneb/test_build.git
