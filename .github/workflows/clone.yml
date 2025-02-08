@@ -11,11 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout this repository
-      uses: actions/checkout@v4
+    - name: Get Token
+      id: get_workflow_token
+      uses: peter-murray/workflow-application-token-action@v2
+      with:
+        application_id: ${{ vars.GH_APPS_ID }}
+        application_private_key: ${{ secrets.GH_APPS_KEY }} 
+
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ steps.get_workflow_token.outputs.token }}
+        repository: congneb/test_build
+
+    # - name: Checkout this repository
+    #   uses: actions/checkout@v4
       
-    - name: Clone private repository
-      env:
-        GH_PAT: ${{ secrets.MY_CLASSIC_TOKEN }}
-      run: |
-        git clone https://$GH_PAT@github.com/congneb/test_build.git
+    # - name: Clone private repository
+    #   env:
+    #     GH_PAT: ${{ secrets.MY_CLASSIC_TOKEN }}
+    #   run: |
+    #     git clone https://$GH_PAT@github.com/congneb/test_build.git
