@@ -7,14 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install some env
+      if: always()
       run : |
         sudo apt-get install git-lfs -y
         git lfs install --skip-repo
 
     - name: checkout arduino repo
+      if: always()
       uses: actions/checkout@v4
       with:
-        repository: 'SiliconLabs/arduino'
+        repository: 'congneb/Cpp-Project'
         ref: 'main'
     - run: git lfs pull
     - run: ls .
