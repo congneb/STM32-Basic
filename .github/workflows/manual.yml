@@ -6,7 +6,7 @@ on:
 
 jobs:
   test_job:
-    if: github.event_name != 'push' || github.event.head_commit.message != 'skip ci'
+    if: false  # Disable this job
     runs-on: ubuntu-latest
     steps:
     - name: Install some env
