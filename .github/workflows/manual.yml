@@ -17,6 +17,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: 'congneb/Cpp-Project'
-        ref: 'main'
-    - run: git lfs pull
-    - run: ls .
+
+    - run: |
+        ls .
+        echo Hahahahaha
