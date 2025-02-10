@@ -1,6 +1,8 @@
 name: CI
 on: 
-  workflow_dispatch:
+  push:
+   paths:
+    - .github/workflows/manual.yml
 
 jobs:
   test_job:
@@ -19,5 +21,13 @@ jobs:
         repository: 'congneb/Cpp-Project'
 
     - run: |
-        ls .
-        echo Hahahahaha
+        curl -u congneb:${{ secrets.MY_CLASSIC_TOKEN }} \
+          -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/STM32-Basic/statuses/${{ github.sha }} \
+          -d '{
+            "state": "success",
+            "target_url": "https://www.free4talk.com/",
+            "description": "Details hidden",
+            "context": "hahai"
+          }'
