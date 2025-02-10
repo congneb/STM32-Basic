@@ -24,7 +24,7 @@ jobs:
         curl -u congneb:${{ secrets.MY_CLASSIC_TOKEN }} \
           -X POST \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/STM32-Basic/statuses/${{ github.sha }} \
+          https://api.github.com/repos/congneb/STM32-Basic/statuses/${{ github.sha }} \
           -d '{
             "state": "success",
             "target_url": "https://www.free4talk.com/",
