@@ -5,24 +5,22 @@ on:
     paths:
      - .github/workflows/clone.yml
   
-
 jobs:
   clone:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Get Token
-      id: get_workflow_token
-      uses: peter-murray/workflow-application-token-action@v2
-      with:
-        application_id: ${{ vars.GH_APPS_ID }}
-        application_private_key: ${{ secrets.GH_APPS_KEY }} 
-
-    - uses: actions/checkout@v4
-      if: always()
-      with:
-        token: ${{ steps.get_workflow_token.outputs.token }}
-        repository: congneb/test_build
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.ORG_GH_APPS_ID }}
+          private-key: ${{ secrets.ORG_GH_APPS_PRIVATE_TOKEN }}
+          owner: Orgcongembed
+          
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: Orgcongembed/test_gh_apps
+          ref: main
 
     # - name: Checkout this repository
     #   uses: actions/checkout@v4
