@@ -20,7 +20,7 @@ jobs:
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.MY_CLASSIC_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.MY_PAT_TOKEN }}" \
             https://api.github.com/repos/congembed/test_gh_apps/dispatches \
             -d '{"event_type":"run-workflow","client_payload":{}}'
 
