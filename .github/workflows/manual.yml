@@ -11,13 +11,39 @@ jobs:
     steps:
       - name: Check push event
         run: |
-          curl -X GET \
-          https://api.github.com/repos/congembed/test_gh_apps/events \
-          -H 'Authorization: Bearer ${{ secrets.MY_CLASSIC_TOKEN }}' \
-          -H 'Content-Type: application/json'
+          # Replace <OWNER> and <REPO> with the repository owner and name
+          OWNER="congembed"
+          REPO="test_gh_apps"
           
-          if [ $? -eq 0 ]; then
-            echo "Push event detected from other repository"
+          # Get the recent events from the repository
+          EVENTS=$(curl -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.MY_CLASSIC_TOKEN }}" https://api.github.com/repos/$OWNER/$REPO/events)
+          
+          # Filter push events and check if any occurred in the last 5 minutes
+          PUSH_EVENTS=$(echo $EVENTS | jq -r '.[] | select(.type == "PushEvent")')
+          
+          # Get the current time and calculate the time 5 minutes ago
+          CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          FIVE_MINUTES_AGO=$(date -u -d "$CURRENT_TIME - 5 minutes" +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # Check if any push event occurred within the last 5 minutes
+          PUSH_IN_LAST_5_MINUTES=$(echo $PUSH_EVENTS | jq -r --arg CURRENT_TIME $CURRENT_TIME --arg FIVE_MINUTES_AGO $FIVE_MINUTES_AGO '.[] | select(.created_at >= $FIVE_MINUTES_AGO and .created_at <= $CURRENT_TIME)')
+          
+          if [ -n "$PUSH_IN_LAST_5_MINUTES" ]; then
+            echo "There was a push event in the last 5 minutes."
           else
-            echo "Push event not detected from other repository"
+            echo "No push event in the last 5 minutes."
           fi
+
+
+
+        
+          # curl -X GET \
+          # https://api.github.com/repos/congembed/test_gh_apps/events \
+          # -H 'Authorization: Bearer ${{ secrets.MY_CLASSIC_TOKEN }}' \
+          # -H 'Content-Type: application/json'
+          
+          # if [ $? -eq 0 ]; then
+          #   echo "Push event detected from other repository"
+          # else
+          #   echo "Push event not detected from other repository"
+          # fi
