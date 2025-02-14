@@ -13,7 +13,7 @@ jobs:
         run: |
           curl -X GET \
           https://api.github.com/repos/congembed/test_gh_apps/events \
-          -H 'Authorization: Bearer YOUR_GITHUB_TOKEN' \
+          -H 'Authorization: Bearer ${{ secrets.MY_CLASSIC_TOKEN }}' \
           -H 'Content-Type: application/json'
           
           if [ $? -eq 0 ]; then
