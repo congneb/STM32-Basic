@@ -1,32 +1,23 @@
-name: CI
-on: 
+name: Check push event of other repo
+
+on:
   push:
     paths:
      - .github/workflows/manual.yml
 
 jobs:
-  test_job:
-    if: false  # Disable this job
+  check-push:
     runs-on: ubuntu-latest
     steps:
-    - name: Install some env
-      run: |
-        sudo apt-get install git-lfs -y
-        git lfs install --skip-repo
-
-    - name: checkout arduino repo
-      uses: actions/checkout@v4
-      with:
-        repository: 'congneb/Cpp-Project'
-
-    - run: |
-        curl -u congneb:${{ secrets.MY_CLASSIC_TOKEN }} \
-          -X POST \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/congneb/STM32-Basic/statuses/${{ github.sha }} \
-          -d '{
-            "state": "success",
-            "target_url": "https://www.free4talk.com/",
-            "description": "Details hidden",
-            "context": "hahai"
-          }'
+      - name: Check push event
+        run: |
+          curl -X GET \
+          https://api.github.com/repos/congembed/test_gh_apps/events \
+          -H 'Authorization: Bearer YOUR_GITHUB_TOKEN' \
+          -H 'Content-Type: application/json'
+          
+          if [ $? -eq 0 ]; then
+            echo "Push event detected from other repository"
+          else
+            echo "Push event not detected from other repository"
+          fi
