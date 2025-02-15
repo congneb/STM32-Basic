@@ -1,0 +1,35 @@
+name: Renode Simulation
+
+on:
+  push:
+    paths:
+     - .github/workflows/test.yml
+     
+  workflow_dispatch:
+
+jobs:
+  run-renode:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Renode
+        run: |
+          # Download and extract Renode
+          wget https://github.com/renode/renode/releases/download/1.12.0/renode-1.12.0-linux.tar.gz
+          tar -xzf renode-1.12.0-linux.tar.gz
+          mv renode-1.12.0-linux renode
+
+      - name: Run Renode Simulation
+        run: |
+          ./renode/bin/renode -f simulation_script.rbc
+
+          ls .
+
+      - name: Upload Simulation Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: simulation-results
+          path: "."
