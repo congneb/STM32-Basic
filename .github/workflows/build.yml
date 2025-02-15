@@ -34,8 +34,8 @@ jobs:
           git commit -m "Automated commit $(date)"
 
       - name: Push to branch
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_PAT_TOKEN }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.MY_PAT_TOKEN }}
         run: |
           cd projects
           git push origin HEAD:test  # Replace 'other-branch' with the target branch name
