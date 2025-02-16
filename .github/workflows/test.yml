@@ -33,7 +33,7 @@ jobs:
         openvas -h
         openvas -s projects
 
-        ls /var/lib/gvm/scans
+        ls /var/lib/openvas
 
     - name: Upload Scan Results
       uses: actions/upload-artifact@v4
