@@ -30,10 +30,11 @@ jobs:
         
     - name: Run OpenVAS scan
       run: |
+        openvas -h
         openvas -s projects create --name "GitHub Action Scan" --config "Full and fast"
 
     - name: Upload Scan Results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: scan-results
         path: /var/lib/gvm/scans/GitHub_Action_Scan/report.html
