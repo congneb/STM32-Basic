@@ -29,8 +29,8 @@ jobs:
           sudo chmod -R 755 /var/log/clamav
           sudo chmod 666 /var/log/clamav/freshclam.log
   
-      - name: Update ClamAV Database
-        run: sudo freshclam
+      # - name: Update ClamAV Database
+      #   run: sudo freshclam
   
       - name: Scan for viruses
         run: clamscan -r projects
