@@ -34,10 +34,17 @@ jobs:
         openvas -s projects
 
         echo ==================================
-        openvas scan start "GitHub Action Scan"
-        echo ==================================
-        openvas scan wait "GitHub Action Scan"
+        openvas scan start "GitHub_Action_Scan"
 
+        openvas scan wait "GitHub_Action_Scan"
+
+        cat /var/log/gvm/openvas.log
+        echo ==================================        
+        ls /var/log/gvm
+        echo ==================================        
+        ls /var/lib/gvm/scans
+        ls /var/lib/gvm/scans/GitHub_Action_Scan
+        
     - name: Upload Scan Results
       uses: actions/upload-artifact@v4
       with:
