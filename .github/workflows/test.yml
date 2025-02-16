@@ -33,7 +33,13 @@ jobs:
       #   run: sudo freshclam
   
       - name: Scan for viruses
-        run: clamscan -r projects
+        run: |
+          clamscan -r projects
+
+          echo ======================
+          ls .
+          echo ======================
+          ls projects
 
       - name: Upload ClamAV report
         uses: actions/upload-artifact@v4
