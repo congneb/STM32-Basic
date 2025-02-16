@@ -22,6 +22,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y openvas
 
+    - name: Fix OpenVAS log permissions
+      run: |
+        sudo mkdir -p /var/log/openvas
+        sudo chown -R $USER:$USER /var/log/openvas
+        sudo chmod -R 755 /var/log/openvas
+        
     - name: Run OpenVAS scan
       run: |
         openvas -s projects
