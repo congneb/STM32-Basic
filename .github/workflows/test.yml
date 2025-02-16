@@ -1,4 +1,4 @@
-name: Renode Simulation
+name: OpenVAS Scan
 
 on:
   push:
@@ -8,28 +8,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-renode:
+  openvas-scan:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        path: projects
 
-      - name: Setup Renode
-        run: |
-          # Download and extract Renode
-          wget https://github.com/renode/renode/releases/download/1.12.0/renode-1.12.0-linux.tar.gz
-          tar -xzf renode-1.12.0-linux.tar.gz
-          mv renode-1.12.0-linux renode
+    - name: Set up OpenVAS
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openvas
 
-      - name: Run Renode Simulation
-        run: |
-          ./renode/bin/renode -f simulation_script.rbc
+    - name: Run OpenVAS scan
+      run: |
+        openvas -s projects
 
-          ls .
-
-      - name: Upload Simulation Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulation-results
-          path: "."
+        ls .
