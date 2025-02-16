@@ -25,6 +25,7 @@ jobs:
     - name: Fix OpenVAS log permissions
       run: |
         sudo chmod -R 755 /var/log/gvm
+        sudo chmod 666 /var/log/gvm/openvas.log
         sudo systemctl restart ospd-openvas
 
 
