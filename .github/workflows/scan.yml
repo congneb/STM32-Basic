@@ -8,17 +8,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  openvas-scan:
+  scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - uses: github/codeql-action/init@v3
-      with:
-        languages: "c-cpp"
-        build-mode: autobuild
+      - name: Install OpenVAS
+        run: |
+          sudo apt update
+          sudo apt install -y openvas gvm
+          sudo gvm-setup
+          sudo gvm-start
 
-    - name: Run CodeQL
-      uses: github/codeql-action/analyze@v3
+      - name: Perform Vulnerability Scan
+        run: |
+          openvascli scan create --name "GitHub Action Scan" --config "Full and fast"
+          openvascli scan start "GitHub Action Scan"
+          openvascli scan wait "GitHub Action Scan"
+
+      - name: Upload Scan Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-results
+          path: /var/lib/gvm/scans/GitHub_Action_Scan/report.ht
