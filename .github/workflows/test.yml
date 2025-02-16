@@ -29,9 +29,9 @@ jobs:
         sudo chmod -R 755 /etc/openvas
         sudo chmod +x /etc/openvas/openvas_log.conf
 
-        # sudo mkdir -p /var/log/openvas
-        # sudo chown -R $USER:$USER /var/log/openvas
-        # sudo chmod -R 755 /var/log/openvas
+        sudo mkdir -p /var/log/openvas
+        sudo chown -R $USER:$USER /var/log/openvas
+        sudo chmod -R 755 /var/log/openvas
         
     - name: Run OpenVAS scan
       run: |
