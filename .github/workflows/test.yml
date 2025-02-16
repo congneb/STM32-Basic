@@ -19,8 +19,7 @@ jobs:
 
     - name: Set up OpenVAS
       run: |
-        /usr/bin/rsync -ltvrP --delete --exclude private/ "rsync://feed.community.greenbone.net:/nvt-feed" "/usr/local/var/lib/openvas/plugins"
-        
+
         sudo apt-get update
         sudo apt-get install -y openvas
 
@@ -34,7 +33,8 @@ jobs:
       run: |
         openvas -h
         openvas -s projects
-
+        /usr/bin/rsync -ltvrP --delete --exclude private/ "rsync://feed.community.greenbone.net:/nvt-feed" "/var/lib/openvas/plugins"
+        
         echo ==================================
         openvas scan start "GitHub_Action_Scan"
 
@@ -42,7 +42,7 @@ jobs:
 
         cat /var/log/gvm/openvas.log
         echo ==================================        
-        ls /var/log/gvm
+        cat /var/log/gvm/ospd-openvas.log
         echo ==================================        
         ls /var/lib/gvm/scans
         ls /var/lib/gvm/scans/GitHub_Action_Scan
