@@ -1,4 +1,4 @@
-name: OpenVAS Scan
+name: Scan
 
 on:
   push:
@@ -12,45 +12,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        path: projects
-
-    - name: Set up OpenVAS
-      run: |
-
-        sudo apt-get update
-        sudo apt-get install -y openvas
-
-    - name: Fix OpenVAS log permissions
-      run: |
-        sudo chmod -R 755 /var/log/gvm
-        sudo chmod 666 /var/log/gvm/openvas.log
-        sudo chmod -R 755 /var/lib/openvas/plugins
-        sudo chown -R $USER:$USER /var/lib/openvas/plugins
-        sudo systemctl restart ospd-openvas
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: projects
+  
+      - name: Install ClamAV
+        run: |
+          sudo apt-get update
+          sudo apt-get install clamav clamav-daemon
+  
+      - name: Update ClamAV Database
+        run: sudo freshclam
+  
+      - name: Scan for viruses
+        run: clamscan -r projects
         
-    - name: Run OpenVAS scan
-      run: |
-        openvas -h
-        openvas -s projects
-        /usr/bin/rsync -ltvrP --delete --exclude private/ "rsync://feed.community.greenbone.net:/nvt-feed" "/var/lib/openvas/plugins"
-        
-        echo ==================================
-        openvas scan start "GitHub_Action_Scan"
+    # - name: Set up OpenVAS
+    #   run: |
 
-        openvas scan wait "GitHub_Action_Scan"
+    #     sudo apt-get update
+    #     sudo apt-get install -y openvas
 
-        cat /var/log/gvm/openvas.log
-        echo ==================================        
-        cat /var/log/gvm/ospd-openvas.log
-        echo ==================================        
-        ls /var/lib/gvm/scans
-        ls /var/lib/gvm/scans/GitHub_Action_Scan
+    # - name: Fix OpenVAS log permissions
+    #   run: |
+    #     sudo chmod -R 755 /var/log/gvm
+    #     sudo chmod 666 /var/log/gvm/openvas.log
+    #     sudo chmod -R 755 /var/lib/openvas/plugins
+    #     sudo chown -R $USER:$USER /var/lib/openvas/plugins
+    #     sudo systemctl restart ospd-openvas
         
-    - name: Upload Scan Results
-      uses: actions/upload-artifact@v4
-      with:
-        name: scan-results
-        path: /var/lib/gvm/scans/GitHub_Action_Scan/report.html
+    # - name: Run OpenVAS scan
+    #   run: |
+    #     openvas -h
+    #     openvas -s projects
+    #     /usr/bin/rsync -ltvrP --delete --exclude private/ "rsync://feed.community.greenbone.net:/nvt-feed" "/var/lib/openvas/plugins"
+        
+    #     echo ==================================
+    #     openvas scan start "GitHub_Action_Scan"
+
+    #     openvas scan wait "GitHub_Action_Scan"
+
+    #     cat /var/log/gvm/openvas.log
+    #     echo ==================================        
+    #     cat /var/log/gvm/ospd-openvas.log
+    #     echo ==================================        
+    #     ls /var/lib/gvm/scans
+    #     ls /var/lib/gvm/scans/GitHub_Action_Scan
+
+     
