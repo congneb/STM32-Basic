@@ -27,6 +27,7 @@ jobs:
       run: |
         sudo chmod -R 755 /var/log/gvm
         sudo chmod 666 /var/log/gvm/openvas.log
+        sudo chmod -R 755 /var/lib/openvas/plugins
         sudo systemctl restart ospd-openvas
         
     - name: Run OpenVAS scan
