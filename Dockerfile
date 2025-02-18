@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt .
 
 # Install the dependencies listed in requirments.txt file
-RUN pip install --no-cache-dir -r requirments.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all files in local machine into Docker image
 COPY . .
