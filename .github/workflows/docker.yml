@@ -33,6 +33,6 @@ jobs:
       # tags: <your_dockerhub_username>/<your_image_name>:<tag>
 
       - name: Pull Docker Image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}//test_1:v1
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/test_1:v1
       - name: Run Docker Container
-        run: docker run ${{ secrets.DOCKER_USERNAME }}//test_1:v1
+        run: docker run ${{ secrets.DOCKER_USERNAME }}/test_1:v1
