@@ -1,26 +1,82 @@
-name: Add Reviewer to Pull Request
+# name: Add Reviewer when open a Pull Request
+
+# on:
+#   pull_request:
+#     types: [opened]
+
+# jobs:
+#   add-reviewer:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Add reviewer to pull request
+#         uses: actions/github-script@v4
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           script: |
+#             const result = await github.pulls.requestReviewers({
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               pull_number: context.issue.number,
+#               reviewers: ['congembed']
+#             })
+#             console.log(result)
+
+
+name: Conditional Reviewer Assignment
 
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  add-reviewer:
+  check-and-add-reviewer:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Add reviewer to pull request
+      - name: Check Commit Statuses
+        id: check-statuses
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const result = await github.pulls.requestReviewers({
+            const { data: statuses } = await github.repos.listCommitStatusesForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.issue.number,
-              reviewers: ['congembed']
-            })
-            console.log(result)
+              ref: context.payload.pull_request.head.sha
+            });
+
+            const allSuccess = statuses.every(status => status.state === 'success');
+            return { allSuccess };
+
+      - name: Add Reviewer if All Checks Passed
+        if: steps.check-statuses.outputs.allSuccess == 'true'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const reviewerUsername = 'congembed'; // Replace with the GitHub username of the reviewer you want to add
+
+            const { data: reviewers } = await github.pulls.listRequestedReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            if (!reviewers.users.some(user => user.login === reviewerUsername)) {
+              await github.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                reviewers: [reviewerUsername]
+              });
+              console.log(`Reviewer ${reviewerUsername} has been added.`);
+            } else {
+              console.log(`Reviewer ${reviewerUsername} is already assigned.`);
+            }
