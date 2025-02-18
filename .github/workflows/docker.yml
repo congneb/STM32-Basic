@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - .github/workflows/docker.yml
+  workflow_dispatch:
+  
 
 jobs:
   build-and-push:
