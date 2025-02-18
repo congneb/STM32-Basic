@@ -2,7 +2,7 @@ name: Handle Re-Review Request
 
 on:
   pull_request_review:
-    types: [rerequested]
+    types: [rerequested, dismissed]
 
 jobs:
   handle-re-review:
