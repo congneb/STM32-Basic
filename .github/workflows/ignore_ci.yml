@@ -1,0 +1,34 @@
+name: Conditional Skip Workflow
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Skip String
+        id: check_skip
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+          SKIP_STRING="IGNORE_CI"
+          
+          if [[ "$PR_TITLE" == *"$SKIP_STRING"* || "$PR_BODY" == *"$SKIP_STRING"* ]]; then
+            echo "Skip string found, skipping the workflow."
+            exit 78
+          else
+            echo "Skip string not found, continuing the workflow."
+          fi
+
+  build:
+    needs: check-pr
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Run build step
+        run: echo "Build step running because skip string was 
