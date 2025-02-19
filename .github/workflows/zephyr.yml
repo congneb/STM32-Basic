@@ -14,6 +14,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: zephyrproject-rtos/example-application
+          path: projects
+          
       - name: dir
         run: |
           pwd
@@ -22,9 +24,9 @@ jobs:
       - name: Setup Zephyr project
         uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
-          app-path: app
+          app-path: projects
           toolchains: arm-zephyr-eabi
 
       - name: Build Zephyr project
         run: |
-          west build app
+          west build projects/app
