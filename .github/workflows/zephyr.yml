@@ -29,4 +29,4 @@ jobs:
 
       - name: Build Zephyr project
         run: |
-          west build -b xg24_ek2703a projects/app
+          west build -b esp32_devkitc_wroom projects/app
