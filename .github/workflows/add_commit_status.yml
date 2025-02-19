@@ -1,0 +1,29 @@
+name: Add Commit Status
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  add-status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set commit status
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const sha = context.payload.pull_request.head.sha;
+            await github.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: sha,
+              state: 'success',  // Options: 'error', 'failure', 'pending', 'success'
+              target_url: 'https://www.free4talk.com/',  // URL for more details
+              description: 'Build status details',
+              context: 'continuous-integration/github-actions'
+            });
