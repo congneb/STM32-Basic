@@ -14,7 +14,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: zephyrproject-rtos/example-application
-
+      - name: dir
+        run: |
+          pwd
+          ls .
+      
       - name: Setup Zephyr project
         uses: zephyrproject-rtos/action-zephyr-setup@v1
         with:
