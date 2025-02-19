@@ -29,4 +29,4 @@ jobs:
 
       - name: Build Zephyr project
         run: |
-          west build projects/app
+          west build -b esp32 projects/app
