@@ -31,4 +31,4 @@ jobs:
     if: success()
     steps:
       - name: Run build step
-        run: echo "Build step running because skip string was 
+        run: echo "Build step running because skip string was"
