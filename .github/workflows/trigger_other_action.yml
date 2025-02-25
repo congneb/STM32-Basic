@@ -4,6 +4,9 @@ on:
   push:
     paths:
      - .github/workflows/trigger_other_action.yml
+
+permissions:
+  contents: write
      
 jobs:
   run-workflow:
