@@ -13,7 +13,7 @@ jobs:
         with:
           app-id: ${{ vars.Demo_congneb1_app_id }}
           private-key: ${{ secrets.Demo_congneb1_private_key }}
-          owner: Orgcongembed
+          owner: congneb
 
       - name: Add comment to pull request
         uses: actions/github-script@v4
