@@ -11,8 +11,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app-id: ${{ vars.ORG_GH_APPS_ID }}
-          private-key: ${{ secrets.ORG_GH_APPS_PRIVATE_TOKEN }}
+          app-id: ${{ vars.Demo_congneb1_app_id }}
+          private-key: ${{ secrets.Demo_congneb1_private_key }}
           owner: Orgcongembed
 
       - name: Add comment to pull request
