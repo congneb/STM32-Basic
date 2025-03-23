@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - name: CLA Assistant
-        uses: cla-assistant/github-action@v2
+        uses: cla-assistant/github-action@v2.6.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
